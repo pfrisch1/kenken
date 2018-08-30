@@ -22,4 +22,3 @@ def _shuffleBoard(board):
 
 def _transposeBoard(board):
     return [list(*row) for row in zip(zip(*board))]
-

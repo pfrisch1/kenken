@@ -2,10 +2,14 @@ To do:
 
 Non-Deep learning stuff
 
-* Collect stats on clues for 4,6,8
+* Collect stats on clues for 4,6,8 (done)
 * Write code to generate random games
+    * add randomly within constraints
+    * one by one, pick clues and starting points
+    * division first, plus minus multiplication, equals last
 * Figure out how to encode games for storage
 ? Write code to determine if solution is unique
+? Scrape for more games
 
 Deep learning stuff:
 
