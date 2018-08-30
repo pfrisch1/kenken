@@ -38,6 +38,7 @@ class Game:
         self.answers = answers
         self.guesses = [[0 for i in range(gameSize)] for j in range(gameSize)]
         self.clueMap = {}
+        # clueMap is has tuples for keys e.g. (3,3)
         for clue in clues:
             for cell in clue.cells:
                 self.clueMap[cell] = clue
@@ -146,6 +147,7 @@ def addClues(maze, clueTexts):
         row = i / gameSize
         col = i % gameSize
         c = c.strip('"')
+        c = c.strip(' ')
         if c == '0':
             continue
         if len(c) == 1:
