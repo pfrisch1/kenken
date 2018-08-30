@@ -2,7 +2,8 @@ import random
 
 # Get a list of randomly generated gameSize x gameSize sudoku boards
 def getSudokuValidBoards(nBoards, gameSize):
-    return [shuffleBoard(initBoard(gameSize)) for _ in xrange(nBoards)]
+    initialBoard = initBoard(gameSize)
+    return [shuffleBoard(initialBoard) for _ in xrange(nBoards)]
 
 # Initialize a known-valid sudoku board deterministically
 def _initBoard(n):
