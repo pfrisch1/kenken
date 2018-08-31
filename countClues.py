@@ -5,19 +5,19 @@ import copy
 
 gameSize = 4
 
-#def makeBoard(gameSize):
-counts = defaultdict(lambda: defaultdict(int))
-games = getGamesFromXML('data/gamedata%d.xml' % gameSize, gameSize)
-nClues = 0
-for game in games:
-    for clue in game.clues:
-        counts[clue.operation][clue.length] += 1
-        nClues += 1
+def makeBoard(gameSize):
+    counts = defaultdict(lambda: defaultdict(int))
+    games = getGamesFromXML('data/gamedata%d.xml' % gameSize, gameSize)
+    nClues = 0
+    for game in games:
+        for clue in game.clues:
+            counts[clue.operation][clue.length] += 1
+            nClues += 1
 
-available = set()
-for r in range(gameSize):
-    for c in range(gameSize):
-        available.add((r,c))
+    available = set()
+    for r in range(gameSize):
+        for c in range(gameSize):
+            available.add((r,c))
 
 def obtainValue(cells, operation, answer):
     # cells: list of tuples

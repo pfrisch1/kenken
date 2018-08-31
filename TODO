@@ -11,5 +11,9 @@ Non-Deep learning stuff
 ? Write code to determine if solution is unique
 ? Scrape for more games
 
+* Do division first
+* then do first pass
+* then merge excessive equals into new or adjacent clues
+
 Deep learning stuff:
 

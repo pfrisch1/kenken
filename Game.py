@@ -13,10 +13,6 @@ class Clue:
 
     def check(guess):
         # guess is a list of numbers
-        assert(
-            len(guess) == self.length,
-            "Invalid guess length for clue"
-        )
         if operation is DIV:
             return (guess[0] / float(guess[1]) == self.value) \
                 or (guess[1] / float(guess[0]) == self.value)
@@ -30,6 +26,13 @@ class Clue:
         if operation is EQL:
             return guess[0] == self.value
 
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return self.text
+
+
 
 class Game:
     def __init__(self, clues, answers, gameSize):
@@ -38,18 +41,36 @@ class Game:
         self.answers = answers
         self.guesses = [[0 for i in range(gameSize)] for j in range(gameSize)]
         self.clueMap = {}
+
         for clue in clues:
             for cell in clue.cells:
                 self.clueMap[cell] = clue
         assert len(self.clueMap) == gameSize ** 2
 
+    def visualizeCluesId(self):
+        textArray = [[0 for i in range(self.gameSize)]
+                     for j in range(self.gameSize)]
+        currId = 0
+        clueIDs = {}
+        for cell in self.clueMap:
+            (r, c) = cell
+            clue = self.clueMap[cell]
+            if clue not in clueIDs:
+                currId += 1
+                clueIDs[clue] = currId
+            textArray[r][c] = clueIDs[clue]
+
+        pprint(clueIDs)
+        for row in textArray:
+            print row
+
     def visualizeClues(self):
         textArray = [[0 for i in range(self.gameSize)]
                      for j in range(self.gameSize)]
-        for r in range(self.gameSize):
-            for c in range(self.gameSize):
-                clue = self.clueMap[(r, c)]
-                textArray[r][c] = clue.text
+        for cell in self.clueMap:
+            (r, c) = cell
+            textArray[r][c] = self.clueMap[cell]
+
         pprint(textArray)
 
     def visualizeAnswers(self):
