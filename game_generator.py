@@ -4,6 +4,7 @@ import copy
 import random
 import numpy as np
 def getBoard(answer, counts, nClues, cluesPerGame, gameSize):
+
     available = []
     for r in range(gameSize):
         for c in range(gameSize):
@@ -49,10 +50,12 @@ def makeBoards(nBoards, gameSize):
     boards = []
 
     answers = getSudokuValidBoards(nBoards, gameSize)
+
     cluesPerGame = nClues / len(games)
 
     for answer in answers:
         boards.append(getBoard(answer, counts, nClues, cluesPerGame, gameSize))
+
 
     return boards
 
