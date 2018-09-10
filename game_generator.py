@@ -49,7 +49,6 @@ def makeBoards(nBoards, gameSize):
         nGames = 280
     elif gameSize is 8:
         counts = {'*': {2: 47, 3: 116, 4: 27, 5: 5, 6: 1}, '+': {2: 109, 3: 99, 4: 29, 5: 7, 6: 1}, '-': {2: 243}, '/': {2: 105}, '=': {1: 35}}
-        nClues = 826
         nGames = 31
     else:
         counts = defaultdict(lambda: defaultdict(int))
