@@ -5,6 +5,7 @@ from pprint import pprint
 
 class Clue:
     def __init__(self, value, operation, cells):
+        value = int(value)
         self.text = '%d%s' % (value, operation)
         self.value = value
         self.operation = operation
