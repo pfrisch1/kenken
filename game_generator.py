@@ -29,7 +29,7 @@ def getBoard(answer, counts, nClues, cluesPerGame, gameSize):
 
 
     while available:
-        (op, length) = randomClue(counts, nClues, ['/'])
+        (op, length) = randomClue(counts, nClues, ['/','='])
         cells = getClueCells(available, length, gameSize)
         if len(cells) == 1:
             op = EQL
@@ -39,19 +39,33 @@ def getBoard(answer, counts, nClues, cluesPerGame, gameSize):
     return Game(clueList, answer, gameSize)
 
 def makeBoards(nBoards, gameSize):
-    counts = defaultdict(lambda: defaultdict(int))
-    games = getGamesFromXML('data/gamedata%d.xml' % gameSize, gameSize)
-    nClues = 0
-    for game in games:
-        for clue in game.clues:
-            counts[clue.operation][clue.length] += 1
-            nClues += 1
+    if gameSize is 4:
+        counts = {'*' : {2: 97, 3: 251, 4: 21}, '+': {2: 230, 3: 185, 4: 18}, '-': {2: 616}, '/': {2: 393}, '=': {1: 328}}
+        nClues = 2139
+        nGames = 279
+    elif gameSize is 6:
+        counts = {'*': {2: 221, 3: 631, 4: 80, 5: 2}, '+': {2: 465, 3: 480, 4: 105, 5: 2, 6: 2}, '-': {2: 1335}, '/': {2: 725}, '=': {1: 483}}
+        nClues = 4531
+        nGames = 280
+    elif gameSize is 8:
+        counts = {'*': {2: 47, 3: 116, 4: 27, 5: 5, 6: 1}, '+': {2: 109, 3: 99, 4: 29, 5: 7, 6: 1}, '-': {2: 243}, '/': {2: 105}, '=': {1: 35}}
+        nClues = 826
+        nGames = 31
+    else:
+        counts = defaultdict(lambda: defaultdict(int))
+        games = getGamesFromXML('data/gamedata%d.xml' % gameSize, gameSize)
+        nClues = 0
+        nGames = len(games)
+        for game in games:
+            for clue in game.clues:
+                counts[clue.operation][clue.length] += 1
+                nClues += 1
 
     boards = []
 
     answers = getSudokuValidBoards(nBoards, gameSize)
 
-    cluesPerGame = nClues / len(games)
+    cluesPerGame = nClues / nGames
 
     for answer in answers:
         boards.append(getBoard(answer, counts, nClues, cluesPerGame, gameSize))

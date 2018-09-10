@@ -60,9 +60,9 @@ class Game:
                 clueIDs[clue] = currId
             textArray[r][c] = clueIDs[clue]
 
-        pprint(clueIDs)
-        for row in textArray:
-            print row
+        for c in sorted(clueIDs, key=clueIDs.get):
+            print clueIDs[c], c 
+        pprint(textArray)
 
     def visualizeClues(self):
         textArray = [[0 for i in range(self.gameSize)]
