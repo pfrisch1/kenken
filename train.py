@@ -83,8 +83,8 @@ for batch_ix in range(args.epochs):
     optimizer.step()
 
     if (batch_ix +1)%args.pr ==0:
-        print batch_ix, l.item(), get_acc(y, ygt)
-        print eval_model(args.n, model, args.gsz)
+        print "batch:", batch_ix, "loss:", l.item(), "acc:", get_acc(y, ygt)
+        print "EVALUDATION:", eval_model(args.n, model, args.gsz)
 
 
 
