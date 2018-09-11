@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 from game_generator import getSudokuValidBoards
 
-# run train.py --bsz 40 --epochs 100000 --lr 0.001 --gsz 4 --pr 100 --n 50
+# run train.py --bsz 4 --epochs 100000 --lr 0.001 --gsz 4 --pr 100 --n 50
 
 def get_args():
     parser = argparse.ArgumentParser(description='train something to play kenken')
@@ -62,11 +62,16 @@ def eval_model(n, model, gsz):
     ygt = torch.Tensor([[0] if i<n/2 else [1] for i in range(n)]) 
 
     y = model(x)
-    return get_acc(y, ygt)
+    acc, ixes = get_acc(y, ygt, ret_ixes=True)
+    return acc, zip(x[ixes], ygt[ixes], y[ixes].sigmoid())
 
-def get_acc(ypred, ygt):
+def get_acc(ypred, ygt, ret_ixes=False):
     ypred = torch.Tensor([0 if pred<0 else 1 for pred in ypred.squeeze()])
-    return (ypred == ygt.squeeze()).sum().item() / float(len(ygt))
+    if not ret_ixes:
+        return (ypred == ygt.squeeze()).sum().item() / float(len(ygt)) 
+    else:
+        return (ypred == ygt.squeeze()).sum().item() / float(len(ygt)), ypred != ygt.squeeze()
+
 
 args = get_args()
 model = get_model(args)
@@ -84,7 +89,9 @@ for batch_ix in range(args.epochs):
 
     if (batch_ix +1)%args.pr ==0:
         print "batch:", batch_ix, "loss:", l.item(), "acc:", get_acc(y, ygt)
-        print "EVALUDATION:", eval_model(args.n, model, args.gsz)
+        acc, info =  eval_model(args.n, model, args.gsz)
+        print "EVALUDATION:", acc
+        # print info
 
 
 
