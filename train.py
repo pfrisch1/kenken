@@ -1,4 +1,5 @@
 from game_generator import makeBoards
+from operations import *
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,16 +34,20 @@ def get_model(args):
     return SimpleCNN(args.gsz)
 
 def get_xy(bsz, gsz):
-    # boards = makeBoards(bsz, gsz)
-
-    # x = torch.LongTensor([board.answers for board in  boards]) - 1
-    x = torch.LongTensor(getSudokuValidBoards(bsz, gsz)) - 1
-    for i in range(bsz/2):
-        change_ix = [np.random.randint(gsz), np.random.randint(gsz)]
-        current = x[i,change_ix[0], change_ix[1]]
-        newone = (current + np.random.randint(1,gsz)) % gsz
-        x[i,change_ix[0],change_ix[1]] = newone
-    ygt = torch.Tensor([[0] if i<bsz/2 else [1] for i in range(bsz)])    
+    boards = makeBoards(bsz, gsz)
+    x = torch.LongTensor(bsz,gsz,gsz,4)
+    ygt = torch.LongTensor(bsz,gsz,gsz)
+    for (i, board) in enumerate(boards):
+        for r in range(gsz):
+            for c in range(gsz):
+                clue = board.clueMap[(r,c)]
+                val = clue.value
+                op = clue.operation
+                ones = val % 10
+                tens = (val % 100 - ones) / 10
+                hunds = (val % 1000 - tens - ones) / 100
+                x[i,r,c] = torch.LongTensor([hunds,tens,ones,op2enc[op]])
+        ygt[i] = torch.LongTensor(board.answers) - 1
 
     return x, ygt
 
@@ -83,15 +88,15 @@ for batch_ix in range(args.epochs):
     optimizer.zero_grad()
     model.train()
     y = model(x)
-    l = F.binary_cross_entropy_with_logits(y,ygt)
+    l = F.cross_entropy(y,ygt)
     l.backward()
     optimizer.step()
 
     if (batch_ix +1)%args.pr ==0:
-        print "batch:", batch_ix, "loss:", l.item(), "acc:", get_acc(y, ygt)
-        acc, info =  eval_model(args.n, model, args.gsz)
-        print "EVALUDATION:", acc
-        # print info
+        print "batch:", batch_ix, "loss:", l.item()#, "acc:", get_acc(y, ygt)
+    #     acc, info =  eval_model(args.n, model, args.gsz)
+    #     print "EVALUATION:", acc
+    #     # print info
 
 
 
